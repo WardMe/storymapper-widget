@@ -36,35 +36,51 @@ function Plugin(props: { storyData: StoryData }) {
   const [score, setScore] = useState(props.storyData.score);
 
   const handleSubmit = () => {
-      storyData.title = title;
-      storyData.description = description;
-      storyData.link = link;
-      // Clean up the tags
-      storyData.tags = tags?.split(",").map((t) => t.trim()).filter(n => n !== "");
+    storyData.title = title;
+    storyData.description = description;
+    storyData.link = link;
+    // Clean up the tags
+    storyData.tags = tags
+      ?.split(",")
+      .map((t) => t.trim())
+      .filter((n) => n !== "");
 
-      // Calculate the score
-      storyData.userImpact = Number(userImpact);
-      storyData.userValue = Number(userValue);
-      storyData.usability = Number(usability)
-      storyData.ethicality = Number(ethicality);
-      storyData.feasability = Number(feasability);
-      storyData.viability = Number(viability);
-      // One of the scores is set, so we display at least 0
-      let calculatedScore = ""
-      if(storyData.userValue || storyData.usability || storyData.ethicality || storyData.feasability || storyData.viability) {
-        calculatedScore = (storyData.userImpact + storyData.userValue + storyData.usability + storyData.ethicality + storyData.feasability + storyData.viability).toString();
-      }
-      setScore(calculatedScore)
-      storyData.score = calculatedScore;
+    // Calculate the score
+    storyData.userImpact = Number(userImpact);
+    storyData.userValue = Number(userValue);
+    storyData.usability = Number(usability);
+    storyData.ethicality = Number(ethicality);
+    storyData.feasability = Number(feasability);
+    storyData.viability = Number(viability);
+    // One of the scores is set, so we display at least 0
+    let calculatedScore = "";
+    if (
+      storyData.userValue ||
+      storyData.usability ||
+      storyData.ethicality ||
+      storyData.feasability ||
+      storyData.viability
+    ) {
+      calculatedScore = (
+        storyData.userImpact +
+        storyData.userValue +
+        storyData.usability +
+        storyData.ethicality +
+        storyData.feasability +
+        storyData.viability
+      ).toString();
+    }
+    setScore(calculatedScore);
+    storyData.score = calculatedScore;
 
-      setStoryData(storyData);
-      emit("UPDATE_STORY_ITEM", storyData);
-    };
+    setStoryData(storyData);
+    emit("UPDATE_STORY_ITEM", storyData);
+  };
 
   return (
     <Container>
       <VerticalSpace space="small" />
-      <Stack style={{paddingBottom: "80px"}}>
+      <Stack style={{ paddingBottom: "80px" }}>
         <Text bold>Story item details</Text>
         <Text>Title:</Text>
         <Textbox
@@ -105,7 +121,7 @@ function Plugin(props: { storyData: StoryData }) {
             minimum={0}
             maximum={100}
             integer
-            style={{maxWidth:"40px"}}
+            style={{ maxWidth: "40px" }}
           />
           % of users that are impacted?
         </Inline>
@@ -117,7 +133,7 @@ function Plugin(props: { storyData: StoryData }) {
             minimum={0}
             maximum={10}
             integer
-            style={{maxWidth:"40px"}}
+            style={{ maxWidth: "40px" }}
           />
           User value, how big is this need?
         </Inline>
@@ -129,7 +145,7 @@ function Plugin(props: { storyData: StoryData }) {
             minimum={0}
             maximum={10}
             integer
-            style={{maxWidth:"40px"}}
+            style={{ maxWidth: "40px" }}
           />
           Usability, how easy is it to use?
         </Inline>
@@ -141,7 +157,7 @@ function Plugin(props: { storyData: StoryData }) {
             minimum={0}
             maximum={10}
             integer
-            style={{maxWidth:"40px"}}
+            style={{ maxWidth: "40px" }}
           />
           Ethicality, are we causing harm or doing good?
         </Inline>
@@ -153,7 +169,7 @@ function Plugin(props: { storyData: StoryData }) {
             minimum={0}
             maximum={10}
             integer
-            style={{maxWidth:"40px"}}
+            style={{ maxWidth: "40px" }}
           />
           Feasability, do we currently have the time, skills, …?
         </Inline>
@@ -165,13 +181,14 @@ function Plugin(props: { storyData: StoryData }) {
             minimum={0}
             maximum={10}
             integer
-            style={{maxWidth:"40px"}}
+            style={{ maxWidth: "40px" }}
           />
           Viability, how much does it help reaching our objective(s)?
         </Inline>
       </Stack>
-      
-      <Stack style={{
+
+      <Stack
+        style={{
           padding: "1rem",
           position: "fixed",
           bottom: 0,
@@ -179,9 +196,10 @@ function Plugin(props: { storyData: StoryData }) {
           width: "100%",
           backgroundColor: "#FFF",
           borderTop: "1px solid #CCC",
-          zIndex: 100
-        }}>
-      <Button fullWidth onClick={handleSubmit} >
+          zIndex: 100,
+        }}
+      >
+        <Button fullWidth onClick={handleSubmit}>
           Update Story Item
         </Button>
       </Stack>

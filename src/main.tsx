@@ -108,7 +108,10 @@ function Storymapper() {
     >
       <SVG src={storyItem.icon} width={s.xxxl} height={s.xxxl}></SVG>
       <AutoLayout direction="vertical" spacing={s.xs} width="fill-parent">
-        <AutoLayout spacing={storyData.score !== "" ? "auto" : 0} width="fill-parent">
+        <AutoLayout
+          spacing={storyData.score !== "" ? "auto" : 0}
+          width="fill-parent"
+        >
           <AutoLayout
             padding={{ vertical: s.xxs, horizontal: s.xs }}
             fill={storyItem.color.light}
@@ -141,9 +144,9 @@ function Storymapper() {
           </AutoLayout>
         </AutoLayout>
         <AutoLayout width="fill-parent" height="hug-contents">
-        <Text
+          <Text
             hidden={storyData.title !== ""}
-            onClick={() => onChange({propertyName : "EDIT"})}
+            onClick={() => onChange({ propertyName: "EDIT" })}
             fontSize={s.md}
             fontFamily={STYLE.fontFamily}
             width="fill-parent"
@@ -154,7 +157,7 @@ function Storymapper() {
           </Text>
           <Text
             hidden={storyData.title === ""}
-            onClick={() => onChange({propertyName : "EDIT"})}
+            onClick={() => onChange({ propertyName: "EDIT" })}
             fontSize={s.lg}
             fontFamily={STYLE.fontFamily}
             width="fill-parent"
@@ -220,7 +223,7 @@ function Storymapper() {
           >
             <SVG
               hidden={!storyData.description}
-              onClick={() => onChange({propertyName : "EDIT"})}
+              onClick={() => onChange({ propertyName: "EDIT" })}
               src={descriptionIcon}
               width={s.lg}
               height={s.lg}
@@ -229,7 +232,7 @@ function Storymapper() {
               hidden={!storyData.link}
               onClick={() =>
                 figma.showUI(
-                  `<script>window.location.href("${storyData.link}","_blank")</script>`,
+                  `<script>window.open('${storyData.link}','_blank');</script>`,
                   { visible: false }
                 )
               }
