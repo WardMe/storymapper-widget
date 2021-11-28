@@ -6,7 +6,7 @@
   ],
   "containsWidget": true,
   "id": "storymapper",
-  "name": "Storymapping Widget",
+  "name": "Storymapper Widget",
   "main": "build/main.js",
   "ui": "build/ui.js"
 }

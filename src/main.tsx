@@ -141,17 +141,9 @@ function Storymapper() {
           </AutoLayout>
         </AutoLayout>
         <AutoLayout width="fill-parent" height="hug-contents">
-          <Text
-            hidden={storyData.title === ""}
-            fontSize={s.lg}
-            fontFamily={STYLE.fontFamily}
-            width="fill-parent"
-            height="hug-contents"
-          >
-            {storyData.title}
-          </Text>
-          <Text
+        <Text
             hidden={storyData.title !== ""}
+            onClick={() => onChange({propertyName : "EDIT"})}
             fontSize={s.md}
             fontFamily={STYLE.fontFamily}
             width="fill-parent"
@@ -159,6 +151,16 @@ function Storymapper() {
             fill="#999"
           >
             {storyItem.description}
+          </Text>
+          <Text
+            hidden={storyData.title === ""}
+            onClick={() => onChange({propertyName : "EDIT"})}
+            fontSize={s.lg}
+            fontFamily={STYLE.fontFamily}
+            width="fill-parent"
+            height="hug-contents"
+          >
+            {storyData.title}
           </Text>
         </AutoLayout>
         <AutoLayout
@@ -218,6 +220,7 @@ function Storymapper() {
           >
             <SVG
               hidden={!storyData.description}
+              onClick={() => onChange({propertyName : "EDIT"})}
               src={descriptionIcon}
               width={s.lg}
               height={s.lg}

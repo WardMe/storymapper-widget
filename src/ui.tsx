@@ -35,7 +35,7 @@ function Plugin(props: { storyData: StoryData }) {
   const [viability, setViability] = useState(props.storyData.viability);
   const [score, setScore] = useState(props.storyData.score);
 
-  const handleUpdateButtonClick = () => {
+  const handleSubmit = () => {
       storyData.title = title;
       storyData.description = description;
       storyData.link = link;
@@ -64,7 +64,7 @@ function Plugin(props: { storyData: StoryData }) {
   return (
     <Container>
       <VerticalSpace space="small" />
-      <Stack>
+      <Stack style={{paddingBottom: "80px"}}>
         <Text bold>Story item details</Text>
         <Text>Title:</Text>
         <Textbox
@@ -169,11 +169,22 @@ function Plugin(props: { storyData: StoryData }) {
           />
           Viability, how much does it help reaching our objective(s)?
         </Inline>
-        <Button fullWidth onClick={handleUpdateButtonClick}>
+      </Stack>
+      
+      <Stack style={{
+          padding: "1rem",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          backgroundColor: "#FFF",
+          borderTop: "1px solid #CCC",
+          zIndex: 100
+        }}>
+      <Button fullWidth onClick={handleSubmit} >
           Update Story Item
         </Button>
       </Stack>
-      <VerticalSpace space="small" />
     </Container>
   );
 }
