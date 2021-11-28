@@ -1,0 +1,12 @@
+{
+  "api": "1.0.0",
+  "widgetApi": "1.0.0",
+  "editorType": [
+    "figjam"
+  ],
+  "containsWidget": true,
+  "id": "storymapper",
+  "name": "Storymapping Widget",
+  "main": "build/main.js",
+  "ui": "build/ui.js"
+}
