@@ -1,4 +1,4 @@
-# Notepad
+# Storymapper a Figjam Widget
 
 ## Development guide
 

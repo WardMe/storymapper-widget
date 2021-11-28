@@ -21,7 +21,7 @@
     ],
     "containsWidget": true,
     "id": "storymapper",
-    "name": "Storymapping Widget",
+    "name": "Storymapper Widget",
     "main": "src/main.tsx",
     "ui": "src/ui.tsx"
   }
