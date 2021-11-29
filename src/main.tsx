@@ -127,9 +127,9 @@ function Storymapper() {
           >
             <AutoLayout spacing={s.xxxs} hidden={storyData.score === ""}>
               <SVG
-                src={`<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16 24.25C16 24.25 6.625 19 6.625 12.625C6.62519 11.4983 7.01561 10.4063 7.72989 9.53492C8.44416 8.6635 9.4382 8.06635 10.543 7.84501C11.6478 7.62366 12.7951 7.79178 13.79 8.32078C14.7848 8.84978 15.5658 9.70701 16 10.7467L16 10.7467C16.4342 9.70701 17.2152 8.84979 18.21 8.32078C19.2049 7.79178 20.3522 7.62366 21.457 7.84501C22.5618 8.06635 23.5558 8.6635 24.2701 9.53492C24.9844 10.4063 25.3748 11.4983 25.375 12.625C25.375 19 16 24.25 16 24.25Z" stroke="${storyItem.color.regular}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`}
+                src={`<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <path d="M16 24.25S6.625 19 6.625 12.625A4.876 4.876 0 0 1 16 10.747h0a4.876 4.876 0 0 1 9.375 1.878C25.375 19 16 24.25 16 24.25Z" stroke="${storyItem.color.regular}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>`}
                 width={s.lg}
                 height={s.lg}
               ></SVG>
