@@ -93,20 +93,15 @@ function Storymapper() {
 
   return (
     <AutoLayout
-      padding={s.xs}
+      padding={s.md}
       width={s.vw}
       fill={"#FFFFFF"}
-      cornerRadius={{
-        topLeft: s.xl,
-        topRight: s.xs,
-        bottomLeft: s.xl,
-        bottomRight: s.xs,
-      }}
+      cornerRadius={s.md}
       spacing={s.md}
       stroke={storyItem.color.light}
       strokeWidth={2}
     >
-      <SVG src={storyItem.icon} width={s.xxxl} height={s.xxxl}></SVG>
+      <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
       <AutoLayout direction="vertical" spacing={s.xs} width="fill-parent">
         <AutoLayout
           spacing={storyData.score !== "" ? "auto" : 0}
@@ -127,20 +122,41 @@ function Storymapper() {
             </Text>
           </AutoLayout>
           <AutoLayout
-            hidden={storyData.score === ""}
-            padding={{ vertical: s.xxs, horizontal: s.md }}
-            cornerRadius={s.xxs}
-            stroke={storyItem.color.regular}
-            strokeWidth={2}
+            hidden={storyData.score === "" || !storyData.link}
+            spacing={s.xs}
           >
-            <Text
-              fontSize={s.sm}
-              fontFamily={STYLE.fontFamily}
-              textCase="upper"
-              fontWeight="medium"
-            >
-              {storyData.score}
-            </Text>
+            <AutoLayout spacing={s.xxxs} hidden={storyData.score === ""}>
+              <SVG
+                src={`<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 24.25C16 24.25 6.625 19 6.625 12.625C6.62519 11.4983 7.01561 10.4063 7.72989 9.53492C8.44416 8.6635 9.4382 8.06635 10.543 7.84501C11.6478 7.62366 12.7951 7.79178 13.79 8.32078C14.7848 8.84978 15.5658 9.70701 16 10.7467L16 10.7467C16.4342 9.70701 17.2152 8.84979 18.21 8.32078C19.2049 7.79178 20.3522 7.62366 21.457 7.84501C22.5618 8.06635 23.5558 8.6635 24.2701 9.53492C24.9844 10.4063 25.3748 11.4983 25.375 12.625C25.375 19 16 24.25 16 24.25Z" stroke="${storyItem.color.regular}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`}
+                width={s.lg}
+                height={s.lg}
+              ></SVG>
+              <Text
+                fontSize={s.sm}
+                fontFamily={STYLE.fontFamily}
+                textCase="upper"
+                fontWeight="medium"
+                verticalAlignText="center"
+                height="fill-parent"
+                fill={storyItem.color.regular}
+              >
+                {storyData.score}
+              </Text>
+            </AutoLayout>
+            <SVG
+              hidden={!storyData.link}
+              onClick={() =>
+                figma.showUI(
+                  `<script>window.open('${storyData.link}','_blank');</script>`,
+                  { visible: false }
+                )
+              }
+              src={linkIcon}
+              width={s.lg}
+              height={s.lg}
+            ></SVG>
           </AutoLayout>
         </AutoLayout>
         <AutoLayout width="fill-parent" height="hug-contents">
@@ -196,51 +212,6 @@ function Storymapper() {
                 </AutoLayout>
               );
             })}
-        </AutoLayout>
-        <AutoLayout
-          hidden={!storyData.date && !storyData.description && !storyData.link}
-          spacing={storyData.date ? "auto" : 0}
-          verticalAlignItems="center"
-          horizontalAlignItems="end"
-          width="fill-parent"
-          height="hug-contents"
-        >
-          <AutoLayout
-            hidden={!storyData.date}
-            spacing={s.xxs}
-            verticalAlignItems="center"
-            height="hug-contents"
-            width="fill-parent"
-          >
-            <SVG src={calendarIcon} width={s.lg} height={s.lg}></SVG>
-            <Text fill="#999" fontSize={s.sm}>
-              {storyData.date}
-            </Text>
-          </AutoLayout>
-          <AutoLayout
-            verticalAlignItems="center"
-            hidden={!storyData.description && !storyData.link}
-          >
-            <SVG
-              hidden={!storyData.description}
-              onClick={() => onChange({ propertyName: "EDIT" })}
-              src={descriptionIcon}
-              width={s.lg}
-              height={s.lg}
-            ></SVG>
-            <SVG
-              hidden={!storyData.link}
-              onClick={() =>
-                figma.showUI(
-                  `<script>window.open('${storyData.link}','_blank');</script>`,
-                  { visible: false }
-                )
-              }
-              src={linkIcon}
-              width={s.lg}
-              height={s.lg}
-            ></SVG>
-          </AutoLayout>
         </AutoLayout>
       </AutoLayout>
     </AutoLayout>
