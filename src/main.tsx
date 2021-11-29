@@ -122,7 +122,7 @@ function Storymapper() {
             </Text>
           </AutoLayout>
           <AutoLayout
-            hidden={storyData.score === "" || !storyData.link}
+            hidden={storyData.score === "" && !storyData.link}
             spacing={s.xs}
           >
             <AutoLayout spacing={s.xxxs} hidden={storyData.score === ""}>
