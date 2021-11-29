@@ -41,9 +41,12 @@ const storyItems: StoryItems = [
     title: "Action",
     description:
       "3. What steps or actions does the user currently take to reach its goal? Put high level actions horizontal, smaller actions vertical.",
-    icon: `<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="16" cy="16" r="16" fill="#8AC926"/>
-      <path d="M18.25 10.75a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5ZM8.5 16s5.25-5.25 8.25-2.48c1.682 1.554 3 3.98 6.75 3.98m-7.265-4.366L10.75 25.75m7.5 0V20.5l-3.981-2.844" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    icon: `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="16" fill="#8AC926"/>
+    <path d="M18.25 10.75C19.4926 10.75 20.5 9.74264 20.5 8.5C20.5 7.25736 19.4926 6.25 18.25 6.25C17.0074 6.25 16 7.25736 16 8.5C16 9.74264 17.0074 10.75 18.25 10.75Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8.5 16C8.5 16 13.75 10.75 16.75 13.5204C18.432 15.0736 19.75 17.5 23.5 17.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16.2354 13.1337L10.75 25.75" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18.25 25.75V20.5L14.269 17.6564" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`,
     color: { regular: "#8AC926", light: "#E9F7D4" },
   },
@@ -63,10 +66,11 @@ const storyItems: StoryItems = [
     title: "External risk",
     description:
       "5. Are there any external risks you can‘t control? For example no internet.",
-    icon: `<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="16" cy="16" r="16" fill="#FF924C"/>
-      <path d="M20.5 22.75a2.25 2.25 0 0 1-4.5 0v-6m-8.969 0a.752.752 0 0 1-.747-.816 9.75 9.75 0 0 1 19.432 0 .752.752 0 0 1-.747.816H7.03Z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M12.25 16.75C12.25 10 16 7 16 7s3.75 3 3.75 9.75" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    icon: `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="16" fill="#FF924C"/>
+    <path d="M20.5 22.75C20.5 23.3467 20.2629 23.919 19.841 24.341C19.419 24.7629 18.8467 25 18.25 25C17.6533 25 17.081 24.7629 16.659 24.341C16.2371 23.919 16 23.3467 16 22.75V16.75" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7.03137 16.75C6.92731 16.7498 6.82442 16.728 6.72922 16.686C6.63402 16.6439 6.54858 16.5826 6.47831 16.5059C6.40803 16.4291 6.35445 16.3386 6.32095 16.2401C6.28746 16.1416 6.27477 16.0372 6.2837 15.9335C6.48856 13.4975 7.60096 11.2274 9.4005 9.5728C11.2 7.91824 13.5554 6.99999 16 6.99999C18.4446 6.99999 20.8 7.91824 22.5995 9.5728C24.399 11.2274 25.5114 13.4975 25.7163 15.9335C25.7252 16.0372 25.7125 16.1416 25.679 16.2401C25.6456 16.3386 25.592 16.4291 25.5217 16.5059C25.4514 16.5826 25.366 16.6439 25.2708 16.686C25.1756 16.728 25.0727 16.7498 24.9686 16.75H7.03137Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12.25 16.75C12.25 10 16 7 16 7C16 7 19.75 10 19.75 16.75" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`,
     color: { regular: "#FF924C", light: "#FFE0CC" },
   },
