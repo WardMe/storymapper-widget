@@ -124,6 +124,8 @@ function Storymapper() {
           <AutoLayout
             hidden={storyData.score === "" && !storyData.link}
             spacing={s.xs}
+            horizontalAlignItems="end"
+            width="fill-parent"
           >
             <AutoLayout spacing={s.xxxs} hidden={storyData.score === ""}>
               <SVG
@@ -183,11 +185,19 @@ function Storymapper() {
           </Text>
         </AutoLayout>
         <AutoLayout
-          hidden={!storyData.tags || storyData.tags.length === 0}
+          hidden={
+            !storyData.date && (!storyData.tags || storyData.tags.length === 0)
+          }
           width="fill-parent"
           height="hug-contents"
-          spacing={s.xxs}
+          spacing={s.xs}
         >
+          <AutoLayout hidden={!storyData.date}>
+            <SVG src={calendarIcon} width={s.md} height={s.md} />
+            <Text fontSize={s.sm} fontFamily={STYLE.fontFamily} fill="#999">
+              {storyData.date?.split("-").reverse().join('-')}
+            </Text>
+          </AutoLayout>
           {storyData.tags &&
             storyData.tags.map((tag, i) => {
               return (
