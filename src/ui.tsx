@@ -35,10 +35,15 @@ function Plugin(props: { storyData: StoryData }) {
   const [viability, setViability] = useState(props.storyData.viability);
   const [score, setScore] = useState(props.storyData.score);
 
+  const handleDate = (event : JSX.TargetedEvent<HTMLInputElement>) => {
+    setDate(event.currentTarget.value);
+  }
+
   const handleSubmit = () => {
     storyData.title = title;
     storyData.description = description;
     storyData.link = link;
+    storyData.date = date;
     // Clean up the tags
     storyData.tags = tags
       ?.split(",")
@@ -82,39 +87,44 @@ function Plugin(props: { storyData: StoryData }) {
       <VerticalSpace space="small" />
       <Stack style={{ paddingBottom: "80px" }}>
         <Text bold>Story item details</Text>
-        <Text>Title:</Text>
+        <label>Title:
         <Textbox
           {...useInitialFocus()}
           onValueInput={setTitle}
           name="title"
           value={title}
           placeholder="Story item title"
-        />
-        <Text>Description:</Text>
+        /></label>
+        <label>Description:
         <TextboxMultiline
           onValueInput={setDescription}
           name="description"
           value={description as string}
           placeholder="Extra information about the story item"
-        />
-        <Text>External link:</Text>
+        /></label>
+        <label>External link:
         <Textbox
           onValueInput={setLink}
           name="link"
           value={link as string}
           placeholder="https://www.yoururlhere.com"
-        />
-        <Text>Tags (Comma separated):</Text>
+        /></label>
+        <label>Tags (Comma separated):
         <Textbox
           onValueInput={setTags}
           name="tags"
           value={tags as string}
           placeholder="Comma separated list of tags"
-        />
+        /></label>
+        <Inline space="small" style={{verticalAlign:"middle"}}>
+          <label htmlFor="date">Add a date:</label>
+          <input id="date" type="date" name="date" value={date} onInput={handleDate} style={{marginLeft:"8px"}} />
+        </Inline>
         <VerticalSpace space="small" />
         <Text bold>Score your story item:</Text>
         <Inline space="small">
           <TextboxNumeric
+            id="userImpact"
             onValueInput={setUserImpact}
             value={userImpact as string}
             placeholder="0 - 100"
@@ -123,10 +133,11 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          % of users that are impacted?
+          <label htmlFor="userImpact">% of users that are impacted?</label>
         </Inline>
         <Inline space="small">
           <TextboxNumeric
+            id="userValue"
             onValueInput={setUserValue}
             value={userValue as string}
             placeholder="0 - 10"
@@ -135,10 +146,11 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          User value, how big is this need?
+          <label htmlFor="userValue">User value, how big is this need?</label>
         </Inline>
         <Inline space="small">
           <TextboxNumeric
+            id="usability"
             onValueInput={setUsability}
             value={usability as string}
             placeholder="0 - 10"
@@ -147,10 +159,11 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          Usability, how easy is it to use?
+          <label htmlFor="usability">Usability, how easy is it to use?</label>
         </Inline>
         <Inline space="small">
           <TextboxNumeric
+            id="ethicality"
             onValueInput={setEthicality}
             value={ethicality as string}
             placeholder="0 - 10"
@@ -159,10 +172,11 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          Ethicality, are we causing harm or doing good?
+          <label htmlFor="ethicality">Ethicality, are we causing harm or doing good?</label>
         </Inline>
         <Inline space="small">
           <TextboxNumeric
+          id="feasability"
             onValueInput={setFeasability}
             value={feasability as string}
             placeholder="0 - 10"
@@ -171,10 +185,11 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          Feasability, do we currently have the time, skills, …?
+          <label htmlFor="feasability">Feasability, do we currently have the time, skills, …?</label>
         </Inline>
         <Inline space="small">
           <TextboxNumeric
+          id="viability"
             onValueInput={setViability}
             value={viability as string}
             placeholder="0 - 10"
@@ -183,7 +198,7 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          Viability, how much does it help reaching our objective(s)?
+          <label htmlFor="viability">Viability, how much does it help reaching our objective(s)?</label>
         </Inline>
       </Stack>
 
