@@ -1,4 +1,27 @@
-# Storymapper a Figjam Widget
+# Storymapper
+## A FigJam story mapping widget to focus on outcomes instead of outputs
+Follow the different phases below to map out possible new story lines with your team.
+Let them focus on mini journeys that create value for your users, instead of a list of features.
+
+### First phase: the backbone
+In the first phase we build the backbone of our product:
+1. Start by adding the user that is most critical to your product
+2. And why does this user use your product?
+3. Next we focus on the user’s story, what actions do they need to take to reach their goal? What obstacles might block them? Put high level actions horizontal and smaller actions vertical. Add additional users that might enter your story at some point.
+4. Once most of the details of your journey are visible, certain steps will be a goal for your users, this is where you should delight them with something they weren’t expecting.
+5. What is the high level business goal of your main story? What impact do you want to achieve? The O in OKR.
+
+### Second phase: discovery
+1. Now that you have your backbone, research and imagine what other needs your users have. What do you want them to do or learn that brings business value? Maybe there are other user types? Focus on actions and needs, not features.
+2. Next you can prioritize these outcomes by adding scores in the widget settings, based on user value, usability, ethicality, feasability and viability.
+
+### Third phase: mini story lines
+1. Combine high priorty outcomes into new mini story lines, always start from a certain user and keep them as small as possible. The smaller they are, the faster they can be tested.
+2. This is the time to brainstorm about experiments, how can you achieve these outcomes? Who can help you with these experiments, who are your partners?
+
+### Fourth phase: research, prototype, develop, test, learn, repeat
+
+
 
 ## Development guide
 
