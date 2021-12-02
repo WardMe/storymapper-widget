@@ -20,7 +20,7 @@
       "figjam"
     ],
     "containsWidget": true,
-    "id": "storymapper",
+    "id": "1047983508317374017",
     "name": "Storymapper Widget",
     "main": "src/main.tsx",
     "ui": "src/ui.tsx"

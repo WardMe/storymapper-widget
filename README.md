@@ -1,10 +1,14 @@
 # Storymapper
+
 ## A FigJam story mapping widget to focus on outcomes instead of outputs
+
 Follow the different phases below to map out possible new story lines with your team.
 Let them focus on mini journeys that create value for your users, instead of a list of features.
 
 ### First phase: the backbone
+
 In the first phase we build the backbone of our product:
+
 1. Start by adding the user that is most critical to your product
 2. And why does this user use your product?
 3. Next we focus on the user’s story, what actions do they need to take to reach their goal? What obstacles might block them? Put high level actions horizontal and smaller actions vertical. Add additional users that might enter your story at some point.
@@ -12,20 +16,34 @@ In the first phase we build the backbone of our product:
 5. What is the high level business goal of your main story? What impact do you want to achieve? The O in OKR.
 
 ### Second phase: discovery
+
 1. Now that you have your backbone, research and imagine what other needs your users have. What do you want them to do or learn that brings business value? Maybe there are other user types? Focus on actions and needs, not features.
 2. Next you can prioritize these outcomes by adding scores in the widget settings, based on user value, usability, ethicality, feasability and viability.
 
 ### Third phase: mini story lines
+
 1. Combine high priorty outcomes into new mini story lines, always start from a certain user and keep them as small as possible. The smaller they are, the faster they can be tested.
 2. This is the time to brainstorm about experiments, how can you achieve these outcomes? Who can help you with these experiments, who are your partners?
 
 ### Fourth phase: research, prototype, develop, test, learn, repeat
 
+## Credits
 
+Icons by [Phosphor Icons](https://phosphoricons.com)
+
+Inspiration for this story mapping widget came from a long list of books including:
+
+- Marty Cagan: Inspired and Empowered
+- Chip & Dan Heath: The power of moments & Upstream
+- Jeff Patton his talks and his book: User Story Mapping
+- Donna Litchaw: The User’s Journey
+- Jeff Gothelf & Josh Seiden: Sense & Respond
+- Josh Seiden: Outcomes over output
+- Gojko Adzic: Impact mapping
 
 ## Development guide
 
-*This widget is built with [Create Figma Plugin](https://yuanqing.github.io/create-figma-plugin/).*
+_This widget is built with [Create Figma Plugin](https://yuanqing.github.io/create-figma-plugin/)._
 
 ### Pre-requisites
 
