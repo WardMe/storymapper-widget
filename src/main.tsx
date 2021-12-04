@@ -1,5 +1,5 @@
 /** @jsx figma.widget.h */
-import { once, showUI } from "@create-figma-plugin/utilities";
+import { on, once, showUI } from "@create-figma-plugin/utilities";
 import storyItems from "./storyItems";
 import storySizes from "./storySizes";
 import {
@@ -122,7 +122,11 @@ function Storymapper() {
             </Text>
           </AutoLayout>
           <AutoLayout
-            hidden={storyData.score === "" && !storyData.link}
+            hidden={
+              storyData.score === "" &&
+              !storyData.link &&
+              !storyData.description
+            }
             spacing={s.xs}
             horizontalAlignItems="end"
             width="fill-parent"
@@ -148,12 +152,24 @@ function Storymapper() {
               </Text>
             </AutoLayout>
             <SVG
+              hidden={!storyData.description}
+              onClick={() => onChange({ propertyName: "EDIT" })}
+              src={descriptionIcon}
+              width={s.lg}
+              height={s.lg}
+            ></SVG>
+            <SVG
               hidden={!storyData.link}
               onClick={() =>
-                figma.showUI(
-                  `<script>window.open('${storyData.link}','_blank');</script>`,
-                  { visible: false }
-                )
+                new Promise<void>(function (resolve: () => void): void {
+                  setTimeout(() => {
+                    resolve();
+                  }, 10);
+                  return figma.showUI(
+                    `<script>window.open('${storyData.link}', '_blank');</script>`,
+                    { visible: false }
+                  );
+                })
               }
               src={linkIcon}
               width={s.lg}
@@ -195,7 +211,7 @@ function Storymapper() {
           <AutoLayout hidden={!storyData.date}>
             <SVG src={calendarIcon} width={s.md} height={s.md} />
             <Text fontSize={s.sm} fontFamily={STYLE.fontFamily} fill="#999">
-              {storyData.date?.split("-").reverse().join('-')}
+              {storyData.date?.split("-").reverse().join("-")}
             </Text>
           </AutoLayout>
           {storyData.tags &&
