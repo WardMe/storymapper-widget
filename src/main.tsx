@@ -8,35 +8,42 @@ import {
   calendarIcon,
   linkIcon,
   descriptionIcon,
+  addRightIcon,
+  addBottomIcon,
 } from "./storySVGs";
 import { StoryData } from "./storyData";
 
 const { widget } = figma;
-const { AutoLayout, Text, SVG, useSyncedState, usePropertyMenu } = widget;
+const { AutoLayout, Text, SVG, useSyncedState, usePropertyMenu, useWidgetId } =
+  widget;
 
 export default function () {
   widget.register(Storymapper);
 }
 
-function Storymapper() {
-  const [text, setText] = useSyncedState("text", "Hello\nWidgets");
+const defStoryData = {
+  title: "",
+  description: "",
+  date: "",
+  link: "",
+  tags: [],
+  userImpact: 100,
+  userValue: "",
+  usability: "",
+  ethicality: "",
+  feasability: "",
+  viability: "",
+  score: "",
+};
 
+function Storymapper() {
+  const widgetId = useWidgetId();
   const [storyItem, setStoryItem] = useSyncedState("storyItem", storyItems[0]);
   const [storySize, setStorySize] = useSyncedState("storySize", "medium");
-  const [storyData, setStoryData] = useSyncedState("storyData", {
-    title: "",
-    description: "",
-    date: "",
-    link: "",
-    tags: [],
-    userImpact: 100,
-    userValue: "",
-    usability: "",
-    ethicality: "",
-    feasability: "",
-    viability: "",
-    score: "",
-  } as StoryData);
+  const [storyData, setStoryData] = useSyncedState(
+    "storyData",
+    defStoryData as StoryData
+  );
 
   // Styling sizes
   const s = storySizes[storySize];
@@ -64,6 +71,20 @@ function Storymapper() {
       icon: item.icon,
     });
   });
+  propertyMenuItems.push(
+    {
+      tooltip: "Add item right",
+      propertyName: "ADD_RIGHT",
+      itemType: "action",
+      icon: addRightIcon,
+    },
+    {
+      tooltip: "Add item below",
+      propertyName: "ADD_BOTTOM",
+      itemType: "action",
+      icon: addBottomIcon,
+    }
+  );
 
   async function onChange({
     propertyName,
@@ -77,6 +98,19 @@ function Storymapper() {
         });
       } else if (propertyName === "SIZE") {
         setStorySize(storySize === "medium" ? "small" : "medium");
+        figma.closePlugin();
+      } else if (
+        propertyName === "ADD_RIGHT" ||
+        propertyName === "ADD_BOTTOM"
+      ) {
+        const r = propertyName === "ADD_RIGHT";
+        const widgetNode = figma.getNodeById(widgetId) as WidgetNode;
+        const widgetOverrides = { storyData : defStoryData, storyItem: storyItem, storySize: storySize };
+        if(!r) widgetOverrides.storySize = "small";
+        const clone = widgetNode.cloneWidget(widgetOverrides);
+        // Move the cloned node
+        clone.x += r ? clone.width + 20 : 0;
+        clone.y += !r ? clone.height + 20 : 0;
         figma.closePlugin();
       } else {
         const updatedItem = storyItems.find((i) => i.type === propertyName);
