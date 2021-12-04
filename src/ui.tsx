@@ -83,7 +83,10 @@ function Plugin(props: { storyData: StoryData }) {
   };
 
   const handleUserKeyPress = (event: KeyboardEvent) => {
-    if (event.key === "Enter" && (event.target as Element).nodeName !== "TEXTAREA") {
+    if (
+      event.key === "Enter" &&
+      (event.target as Element).nodeName !== "TEXTAREA"
+    ) {
       handleSubmit();
     }
   };
