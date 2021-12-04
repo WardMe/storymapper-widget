@@ -16,7 +16,7 @@ import {
 } from "@create-figma-plugin/ui";
 import { emit } from "@create-figma-plugin/utilities";
 import { h, JSX } from "preact";
-import { useCallback, useState } from "preact/hooks";
+import { useEffect, useCallback, useState } from "preact/hooks";
 import { StoryData } from "./storyData";
 
 function Plugin(props: { storyData: StoryData }) {
@@ -35,9 +35,9 @@ function Plugin(props: { storyData: StoryData }) {
   const [viability, setViability] = useState(props.storyData.viability);
   const [score, setScore] = useState(props.storyData.score);
 
-  const handleDate = (event : JSX.TargetedEvent<HTMLInputElement>) => {
+  const handleDate = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     setDate(event.currentTarget.value);
-  }
+  };
 
   const handleSubmit = () => {
     storyData.title = title;
@@ -82,43 +82,71 @@ function Plugin(props: { storyData: StoryData }) {
     emit("UPDATE_STORY_ITEM", storyData);
   };
 
+  const handleUserKeyPress = (event: KeyboardEvent) => {
+    if (event.key === "Enter" && (event.target as Element).nodeName !== "TEXTAREA") {
+      handleSubmit();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleUserKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleUserKeyPress);
+    };
+  }, [handleUserKeyPress]);
+
   return (
     <Container>
       <VerticalSpace space="small" />
       <Stack style={{ paddingBottom: "80px" }}>
         <Text bold>Story item details</Text>
-        <label>Title:
-        <Textbox
-          {...useInitialFocus()}
-          onValueInput={setTitle}
-          name="title"
-          value={title}
-          placeholder="Story item title"
-        /></label>
-        <label>Description:
-        <TextboxMultiline
-          onValueInput={setDescription}
-          name="description"
-          value={description as string}
-          placeholder="Extra information about the story item"
-        /></label>
-        <label>External link:
-        <Textbox
-          onValueInput={setLink}
-          name="link"
-          value={link as string}
-          placeholder="https://www.yoururlhere.com"
-        /></label>
-        <label>Tags (Comma separated):
-        <Textbox
-          onValueInput={setTags}
-          name="tags"
-          value={tags as string}
-          placeholder="Comma separated list of tags"
-        /></label>
-        <Inline space="small" style={{verticalAlign:"middle"}}>
+        <label>
+          Title:
+          <Textbox
+            {...useInitialFocus()}
+            onValueInput={setTitle}
+            name="title"
+            value={title}
+            placeholder="Story item title"
+          />
+        </label>
+        <label>
+          Description:
+          <TextboxMultiline
+            onValueInput={setDescription}
+            name="description"
+            value={description as string}
+            placeholder="Extra information about the story item"
+          />
+        </label>
+        <label>
+          External link:
+          <Textbox
+            onValueInput={setLink}
+            name="link"
+            value={link as string}
+            placeholder="https://www.yoururlhere.com"
+          />
+        </label>
+        <label>
+          Tags (Comma separated):
+          <Textbox
+            onValueInput={setTags}
+            name="tags"
+            value={tags as string}
+            placeholder="Comma separated list of tags"
+          />
+        </label>
+        <Inline space="small" style={{ verticalAlign: "middle" }}>
           <label htmlFor="date">Add a date:</label>
-          <input id="date" type="date" name="date" value={date} onInput={handleDate} style={{marginLeft:"8px"}} />
+          <input
+            id="date"
+            type="date"
+            name="date"
+            value={date}
+            onInput={handleDate}
+            style={{ marginLeft: "8px" }}
+          />
         </Inline>
         <VerticalSpace space="small" />
         <Text bold>Score your story item:</Text>
@@ -172,11 +200,13 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          <label htmlFor="ethicality">Ethicality, are we causing harm or doing good?</label>
+          <label htmlFor="ethicality">
+            Ethicality, are we causing harm or doing good?
+          </label>
         </Inline>
         <Inline space="small">
           <TextboxNumeric
-          id="feasability"
+            id="feasability"
             onValueInput={setFeasability}
             value={feasability as string}
             placeholder="0 - 10"
@@ -185,11 +215,13 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          <label htmlFor="feasability">Feasability, do we currently have the time, skills, …?</label>
+          <label htmlFor="feasability">
+            Feasability, do we currently have the time, skills, …?
+          </label>
         </Inline>
         <Inline space="small">
           <TextboxNumeric
-          id="viability"
+            id="viability"
             onValueInput={setViability}
             value={viability as string}
             placeholder="0 - 10"
@@ -198,7 +230,9 @@ function Plugin(props: { storyData: StoryData }) {
             integer
             style={{ maxWidth: "40px" }}
           />
-          <label htmlFor="viability">Viability, how much does it help reaching our objective(s)?</label>
+          <label htmlFor="viability">
+            Viability, how much does it help reaching our objective(s)?
+          </label>
         </Inline>
       </Stack>
 
