@@ -103,14 +103,35 @@ function Storymapper() {
         propertyName === "ADD_RIGHT" ||
         propertyName === "ADD_BOTTOM"
       ) {
-        const r = propertyName === "ADD_RIGHT";
+        const r = propertyName === "ADD_RIGHT"; // Add to the right?
         const widgetNode = figma.getNodeById(widgetId) as WidgetNode;
         const widgetOverrides = { storyData : defStoryData, storyItem: storyItem, storySize: storySize };
         if(!r) widgetOverrides.storySize = "small";
         const clone = widgetNode.cloneWidget(widgetOverrides);
+
+        // Get all available widgets:
+        let otherWidgets = figma.currentPage.findAll(node => node.type === 'WIDGET');
+
+        // Next position
+        const incr = 20;
+        let pos = {
+          x : r ? clone.x + clone.width + incr : clone.x,
+          y : !r ? clone.y + clone.height + incr : clone.y
+        }
+
+        // Check if there is a widget in the cloning area
+        otherWidgets.forEach(({x, y, width, height}) => {
+          const area = { min: r ? pos.x : pos.y, max: r ? x + width : y + height }
+          const d = r ? "x" : "y";
+          if(pos[d] >= area.min && pos[d] <= area.max) {
+            pos[d] = area.max + incr;
+          }
+        });
+
         // Move the cloned node
-        clone.x += r ? clone.width + 20 : 0;
-        clone.y += !r ? clone.height + 20 : 0;
+        clone.x = pos.x;
+        clone.y = pos.y;
+
         figma.closePlugin();
       } else {
         const updatedItem = storyItems.find((i) => i.type === propertyName);
