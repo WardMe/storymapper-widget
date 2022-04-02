@@ -1,5 +1,8 @@
 /** @jsx figma.widget.h */
-import { on, once, showUI } from "@create-figma-plugin/utilities";
+import {
+  once,
+  showUI,
+} from "@create-figma-plugin/utilities";
 import storyItems from "./storyItems";
 import storySizes from "./storySizes";
 import {
@@ -8,8 +11,7 @@ import {
   calendarIcon,
   linkIcon,
   descriptionIcon,
-  addRightIcon,
-  addBottomIcon,
+  tagIcon
 } from "./storySVGs";
 import { StoryData } from "./storyData";
 
@@ -100,37 +102,66 @@ function Storymapper() {
 
   return (
     <AutoLayout
-      padding={{ left: s.md, right: 0, top: 0, bottom: s.md }}
       width={s.vw}
       fill={"#FFFFFF"}
       cornerRadius={s.md}
-      spacing={s.md}
       stroke={storyItem.color.light}
       strokeWidth={2}
     >
-      <AutoLayout padding={{ left: 0, right: 0, top: s.md, bottom: 0 }}>
+      <AutoLayout padding={s.md}>
         <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
       </AutoLayout>
+
       <AutoLayout
-        padding={{ left: 0, right: 0, top: s.md, bottom: 0 }}
+        padding={{ top: s.md, bottom: s.md, right: s.md }}
         direction="vertical"
         spacing={s.xs}
         width="fill-parent"
       >
-        <AutoLayout
-          padding={{ vertical: s.xxs, horizontal: s.xs }}
-          fill={storyItem.color.light}
-          cornerRadius={s.xxs}
-        >
-          <Text
-            fontSize={s.sm}
-            fontFamily={STYLE.fontFamily}
-            textCase="upper"
-            fontWeight="medium"
+        <AutoLayout width="fill-parent" verticalAlignItems="center" spacing={(!storyData.description && !storyData.link) ? 0 : 'auto'}>
+          <AutoLayout
+            padding={{ vertical: s.xxs, horizontal: s.xs }}
+            fill={storyItem.color.light}
+            cornerRadius={s.xxs}
           >
-            {storyItem.title}
-          </Text>
+            <Text
+              fontSize={s.sm}
+              fontFamily={STYLE.fontFamily}
+              textCase="upper"
+              fontWeight="medium"
+            >
+              {storyItem.title}
+            </Text>
+          </AutoLayout>
+
+          <AutoLayout hidden={!storyData.description && !storyData.link}>
+            <SVG
+              hidden={!storyData.description}
+              onClick={() => onChange({ propertyName: "EDIT" })}
+              src={descriptionIcon}
+              width={s.lg}
+              height={s.lg}
+            ></SVG>
+            <SVG
+              hidden={!storyData.link}
+              onClick={() =>
+                new Promise<void>(function (resolve: () => void): void {
+                  setTimeout(() => {
+                    resolve();
+                  }, 10);
+                  return figma.showUI(
+                    `<script>window.open('${storyData.link}', '_blank');</script>`,
+                    { visible: false }
+                  );
+                })
+              }
+              src={linkIcon}
+              width={s.lg}
+              height={s.lg}
+            ></SVG>
+          </AutoLayout>
         </AutoLayout>
+
         <AutoLayout width="fill-parent">
           <Text
             hidden={storyData.title !== ""}
@@ -154,51 +185,59 @@ function Storymapper() {
             {storyData.title}
           </Text>
         </AutoLayout>
-        <AutoLayout hidden={!storyData.date}>
-          <SVG src={calendarIcon} width={s.md} height={s.md} />
-          <Text fontSize={s.sm} fontFamily={STYLE.fontFamily} fill="#666">
-            {storyData.date?.split("-").reverse().join("-")}
-          </Text>
-        </AutoLayout>
+
         <AutoLayout
-          hidden={!storyData.tags || storyData.tags.length === 0}
+          hidden={
+            !storyData.date && (!storyData.tags || storyData.tags.length === 0)
+          }
           width="fill-parent"
           spacing={s.xs}
+          direction="vertical"
         >
-          {storyData.tags &&
-            storyData.tags.map((tag, i) => {
-              return (
-                <AutoLayout
-                  fill="#F3F3F3"
-                  padding={{
-                    top: s.xxxs,
-                    bottom: s.xxxs,
-                    left: s.xs,
-                    right: s.xs,
-                  }}
-                  cornerRadius={s.xxs}
-                  key={`tag-${i}`}
-                >
-                  <Text
-                    fontSize={s.sm}
-                    fontFamily={STYLE.fontFamily}
-                    fill="#666"
-                  >
-                    {tag}
-                  </Text>
-                </AutoLayout>
-              );
-            })}
+          <AutoLayout
+            width="fill-parent"
+            height={1}
+            cornerRadius={s.xxs}
+            fill={storyItem.color.light}
+          ></AutoLayout>
+
+          <AutoLayout
+            hidden={!storyData.date}
+            spacing={s.xxs}
+            verticalAlignItems="center"
+            width="fill-parent"
+          >
+            <SVG src={calendarIcon} width={s.md} height={s.md} />
+            <Text fontSize={s.sm} fontFamily={STYLE.fontFamily} fill="#999">
+              {storyData.date?.split("-").reverse().join("-")}
+            </Text>
+          </AutoLayout>
+
+          <AutoLayout
+            hidden={!storyData.tags || storyData.tags.length === 0}
+            spacing={s.xxs}
+            verticalAlignItems="center"
+            width="fill-parent"
+          >
+            <SVG src={tagIcon} width={s.md} height={s.md} />
+            <Text
+              fontSize={s.sm}
+              fontFamily={STYLE.fontFamily}
+              fill="#999"
+              width="fill-parent"
+            >
+              {storyData.tags &&
+                storyData.tags
+                  .map((tag) => {
+                    return `${tag.replace(/\x20/g, "\xa0")}`;
+                  })
+                  .join(" • ")}
+            </Text>
+          </AutoLayout>
         </AutoLayout>
       </AutoLayout>
 
       <AutoLayout
-        hidden={!storyData.score && !storyData.link && !storyData.description}
-        spacing={s.xs}
-        direction="vertical"
-        horizontalAlignItems="center"
-      >
-        <AutoLayout
           spacing={s.xxxs}
           hidden={!storyData.score}
           fill={storyItem.color.light}
@@ -217,6 +256,7 @@ function Storymapper() {
             fontFamily={STYLE.fontFamily}
             textCase="upper"
             fontWeight="medium"
+            width="hug-contents"
           >
             score
           </Text>
@@ -224,40 +264,12 @@ function Storymapper() {
             fontSize={s.md}
             fontFamily={STYLE.fontFamily}
             fontWeight="bold"
-            verticalAlignText="center"
-            height="fill-parent"
+            horizontalAlignText="center"
+            width="hug-contents"
           >
             {storyData.score}
           </Text>
         </AutoLayout>
-
-        <AutoLayout direction="vertical" padding={s.xs} spacing={s.xxs}>
-          <SVG
-            hidden={!storyData.description}
-            onClick={() => onChange({ propertyName: "EDIT" })}
-            src={descriptionIcon}
-            width={s.lg}
-            height={s.lg}
-          ></SVG>
-          <SVG
-            hidden={!storyData.link}
-            onClick={() =>
-              new Promise<void>(function (resolve: () => void): void {
-                setTimeout(() => {
-                  resolve();
-                }, 10);
-                return figma.showUI(
-                  `<script>window.open('${storyData.link}', '_blank');</script>`,
-                  { visible: false }
-                );
-              })
-            }
-            src={linkIcon}
-            width={s.lg}
-            height={s.lg}
-          ></SVG>
-        </AutoLayout>
-      </AutoLayout>
     </AutoLayout>
   );
 }
