@@ -67,12 +67,11 @@ function Plugin(props: { storyData: StoryData }) {
       storyData.viability
     ) {
       calculatedScore = (
-        storyData.userImpact +
-        storyData.userValue +
+        Math.round((storyData.userValue +
         storyData.usability +
         storyData.ethicality +
         storyData.feasability +
-        storyData.viability
+        storyData.viability) * storyData.userImpact / 100)
       ).toString();
     }
     setScore(calculatedScore);
