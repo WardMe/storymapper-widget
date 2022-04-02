@@ -17,7 +17,7 @@ const storySizes : StorySizes = {
       xxl: 36,
       xxxl: 48,
       xxxxl: 60,
-      vw: 300
+      vw: 340
     },
     "medium" : {
       xxxs: 2,
@@ -30,7 +30,7 @@ const storySizes : StorySizes = {
       xxl: 48,
       xxxl: 64,
       xxxxl: 80,
-      vw: 400
+      vw: 440
     }
   }
 

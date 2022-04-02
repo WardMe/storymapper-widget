@@ -1,5 +1,8 @@
 /** @jsx figma.widget.h */
-import { on, once, showUI } from "@create-figma-plugin/utilities";
+import {
+  once,
+  showUI,
+} from "@create-figma-plugin/utilities";
 import storyItems from "./storyItems";
 import storySizes from "./storySizes";
 import {
@@ -8,8 +11,7 @@ import {
   calendarIcon,
   linkIcon,
   descriptionIcon,
-  addRightIcon,
-  addBottomIcon,
+  tagIcon
 } from "./storySVGs";
 import { StoryData } from "./storyData";
 
@@ -71,20 +73,6 @@ function Storymapper() {
       icon: item.icon,
     });
   });
-  propertyMenuItems.push(
-    {
-      tooltip: "Add item right",
-      propertyName: "ADD_RIGHT",
-      itemType: "action",
-      icon: addRightIcon,
-    },
-    {
-      tooltip: "Add item below",
-      propertyName: "ADD_BOTTOM",
-      itemType: "action",
-      icon: addBottomIcon,
-    }
-  );
 
   async function onChange({
     propertyName,
@@ -98,40 +86,6 @@ function Storymapper() {
         });
       } else if (propertyName === "SIZE") {
         setStorySize(storySize === "medium" ? "small" : "medium");
-        figma.closePlugin();
-      } else if (
-        propertyName === "ADD_RIGHT" ||
-        propertyName === "ADD_BOTTOM"
-      ) {
-        const r = propertyName === "ADD_RIGHT"; // Add to the right?
-        const widgetNode = figma.getNodeById(widgetId) as WidgetNode;
-        const widgetOverrides = { storyData : defStoryData, storyItem: storyItem, storySize: storySize };
-        if(!r) widgetOverrides.storySize = "small";
-        const clone = widgetNode.cloneWidget(widgetOverrides);
-
-        // Get all available widgets:
-        let otherWidgets = figma.currentPage.findAll(node => node.type === 'WIDGET');
-
-        // Next position
-        const incr = 20;
-        let pos = {
-          x : r ? clone.x + clone.width + incr : clone.x,
-          y : !r ? clone.y + clone.height + incr : clone.y
-        }
-
-        // Check if there is a widget in the cloning area
-        otherWidgets.forEach(({x, y, width, height}) => {
-          const area = { min: r ? pos.x : pos.y, max: r ? x + width : y + height }
-          const d = r ? "x" : "y";
-          if(pos[d] >= area.min && pos[d] <= area.max) {
-            pos[d] = area.max + incr;
-          }
-        });
-
-        // Move the cloned node
-        clone.x = pos.x;
-        clone.y = pos.y;
-
         figma.closePlugin();
       } else {
         const updatedItem = storyItems.find((i) => i.type === propertyName);
@@ -148,20 +102,23 @@ function Storymapper() {
 
   return (
     <AutoLayout
-      padding={s.md}
       width={s.vw}
       fill={"#FFFFFF"}
       cornerRadius={s.md}
-      spacing={s.md}
       stroke={storyItem.color.light}
       strokeWidth={2}
     >
-      <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
-      <AutoLayout direction="vertical" spacing={s.xs} width="fill-parent">
-        <AutoLayout
-          spacing={storyData.score !== "" ? "auto" : 0}
-          width="fill-parent"
-        >
+      <AutoLayout padding={s.md}>
+        <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
+      </AutoLayout>
+
+      <AutoLayout
+        padding={{ top: s.md, bottom: s.md, right: s.md }}
+        direction="vertical"
+        spacing={s.xs}
+        width="fill-parent"
+      >
+        <AutoLayout width="fill-parent" verticalAlignItems="center" spacing={(!storyData.description && !storyData.link) ? 0 : 'auto'}>
           <AutoLayout
             padding={{ vertical: s.xxs, horizontal: s.xs }}
             fill={storyItem.color.light}
@@ -176,36 +133,8 @@ function Storymapper() {
               {storyItem.title}
             </Text>
           </AutoLayout>
-          <AutoLayout
-            hidden={
-              storyData.score === "" &&
-              !storyData.link &&
-              !storyData.description
-            }
-            spacing={s.xs}
-            horizontalAlignItems="end"
-            width="fill-parent"
-          >
-            <AutoLayout spacing={s.xxxs} hidden={storyData.score === ""}>
-              <SVG
-                src={`<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" fill="none">
-                <path d="M16 24.25S6.625 19 6.625 12.625A4.876 4.876 0 0 1 16 10.747h0a4.876 4.876 0 0 1 9.375 1.878C25.375 19 16 24.25 16 24.25Z" stroke="${storyItem.color.regular}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>`}
-                width={s.lg}
-                height={s.lg}
-              ></SVG>
-              <Text
-                fontSize={s.sm}
-                fontFamily={STYLE.fontFamily}
-                textCase="upper"
-                fontWeight="medium"
-                verticalAlignText="center"
-                height="fill-parent"
-                fill={storyItem.color.regular}
-              >
-                {storyData.score}
-              </Text>
-            </AutoLayout>
+
+          <AutoLayout hidden={!storyData.description && !storyData.link}>
             <SVG
               hidden={!storyData.description}
               onClick={() => onChange({ propertyName: "EDIT" })}
@@ -232,7 +161,8 @@ function Storymapper() {
             ></SVG>
           </AutoLayout>
         </AutoLayout>
-        <AutoLayout width="fill-parent" height="hug-contents">
+
+        <AutoLayout width="fill-parent">
           <Text
             hidden={storyData.title !== ""}
             onClick={() => onChange({ propertyName: "EDIT" })}
@@ -255,46 +185,91 @@ function Storymapper() {
             {storyData.title}
           </Text>
         </AutoLayout>
+
         <AutoLayout
           hidden={
             !storyData.date && (!storyData.tags || storyData.tags.length === 0)
           }
           width="fill-parent"
-          height="hug-contents"
           spacing={s.xs}
+          direction="vertical"
         >
-          <AutoLayout hidden={!storyData.date}>
+          <AutoLayout
+            width="fill-parent"
+            height={1}
+            cornerRadius={s.xxs}
+            fill={storyItem.color.light}
+          ></AutoLayout>
+
+          <AutoLayout
+            hidden={!storyData.date}
+            spacing={s.xxs}
+            verticalAlignItems="center"
+            width="fill-parent"
+          >
             <SVG src={calendarIcon} width={s.md} height={s.md} />
             <Text fontSize={s.sm} fontFamily={STYLE.fontFamily} fill="#999">
               {storyData.date?.split("-").reverse().join("-")}
             </Text>
           </AutoLayout>
-          {storyData.tags &&
-            storyData.tags.map((tag, i) => {
-              return (
-                <AutoLayout
-                  fill="#F3F3F3"
-                  padding={{
-                    top: s.xxxs,
-                    bottom: s.xxxs,
-                    left: s.xs,
-                    right: s.xs,
-                  }}
-                  cornerRadius={s.xxs}
-                  key={`tag-${i}`}
-                >
-                  <Text
-                    fontSize={s.xs}
-                    fontFamily={STYLE.fontFamily}
-                    fill="#999"
-                  >
-                    {tag}
-                  </Text>
-                </AutoLayout>
-              );
-            })}
+
+          <AutoLayout
+            hidden={!storyData.tags || storyData.tags.length === 0}
+            spacing={s.xxs}
+            verticalAlignItems="center"
+            width="fill-parent"
+          >
+            <SVG src={tagIcon} width={s.md} height={s.md} />
+            <Text
+              fontSize={s.sm}
+              fontFamily={STYLE.fontFamily}
+              fill="#999"
+              width="fill-parent"
+            >
+              {storyData.tags &&
+                storyData.tags
+                  .map((tag) => {
+                    return `${tag.replace(/\x20/g, "\xa0")}`;
+                  })
+                  .join(" • ")}
+            </Text>
+          </AutoLayout>
         </AutoLayout>
       </AutoLayout>
+
+      <AutoLayout
+          spacing={s.xxxs}
+          hidden={!storyData.score}
+          fill={storyItem.color.light}
+          padding={{ vertical: s.xs, horizontal: s.xs }}
+          cornerRadius={{
+            topLeft: 0,
+            topRight: 0,
+            bottomLeft: s.md,
+            bottomRight: 0,
+          }}
+          direction="vertical"
+          horizontalAlignItems="center"
+        >
+          <Text
+            fontSize={s.xs}
+            fontFamily={STYLE.fontFamily}
+            textCase="upper"
+            fontWeight="medium"
+            width="hug-contents"
+          >
+            score
+          </Text>
+          <Text
+            fontSize={s.md}
+            fontFamily={STYLE.fontFamily}
+            fontWeight="bold"
+            horizontalAlignText="center"
+            width="hug-contents"
+          >
+            {storyData.score}
+          </Text>
+        </AutoLayout>
     </AutoLayout>
   );
 }
