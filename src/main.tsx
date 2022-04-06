@@ -1,8 +1,5 @@
 /** @jsx figma.widget.h */
-import {
-  once,
-  showUI,
-} from "@create-figma-plugin/utilities";
+import { once, showUI } from "@create-figma-plugin/utilities";
 import storyItems from "./storyItems";
 import storySizes from "./storySizes";
 import {
@@ -10,14 +7,22 @@ import {
   sizeIcon,
   calendarIcon,
   linkIcon,
-  descriptionIcon,
-  tagIcon
+  descriptionShowIcon,
+  descriptionHideIcon,
+  tagIcon,
 } from "./storySVGs";
 import { StoryData } from "./storyData";
 
 const { widget } = figma;
-const { AutoLayout, Text, SVG, useSyncedState, usePropertyMenu, useWidgetId } =
-  widget;
+const {
+  AutoLayout,
+  Text,
+  SVG,
+  Frame,
+  useSyncedState,
+  usePropertyMenu,
+  useWidgetId,
+} = widget;
 
 export default function () {
   widget.register(Storymapper);
@@ -42,6 +47,10 @@ function Storymapper() {
   const widgetId = useWidgetId();
   const [storyItem, setStoryItem] = useSyncedState("storyItem", storyItems[0]);
   const [storySize, setStorySize] = useSyncedState("storySize", "medium");
+  const [showDescription, setShowDescription] = useSyncedState(
+    "showDescription",
+    false
+  );
   const [storyData, setStoryData] = useSyncedState(
     "storyData",
     defStoryData as StoryData
@@ -87,6 +96,9 @@ function Storymapper() {
       } else if (propertyName === "SIZE") {
         setStorySize(storySize === "medium" ? "small" : "medium");
         figma.closePlugin();
+      } else if (propertyName === "DESCRIPTION") {
+        setShowDescription(!showDescription);
+        figma.closePlugin();
       } else {
         const updatedItem = storyItems.find((i) => i.type === propertyName);
         if (updatedItem) setStoryItem(updatedItem);
@@ -117,8 +129,13 @@ function Storymapper() {
         direction="vertical"
         spacing={s.xs}
         width="fill-parent"
+        overflow="visible"
       >
-        <AutoLayout width="fill-parent" verticalAlignItems="center" spacing={(!storyData.description && !storyData.link) ? 0 : 'auto'}>
+        <AutoLayout
+          width="fill-parent"
+          verticalAlignItems="center"
+          spacing={!storyData.link ? 0 : "auto"}
+        >
           <AutoLayout
             padding={{ vertical: s.xxs, horizontal: s.xs }}
             fill={storyItem.color.light}
@@ -134,14 +151,7 @@ function Storymapper() {
             </Text>
           </AutoLayout>
 
-          <AutoLayout hidden={!storyData.description && !storyData.link}>
-            <SVG
-              hidden={!storyData.description}
-              onClick={() => onChange({ propertyName: "EDIT" })}
-              src={descriptionIcon}
-              width={s.lg}
-              height={s.lg}
-            ></SVG>
+          <AutoLayout hidden={!storyData.link}>
             <SVG
               hidden={!storyData.link}
               onClick={() =>
@@ -162,7 +172,12 @@ function Storymapper() {
           </AutoLayout>
         </AutoLayout>
 
-        <AutoLayout width="fill-parent">
+        <AutoLayout
+          width="fill-parent"
+          direction="vertical"
+          spacing={s.xxs}
+          overflow="visible"
+        >
           <Text
             hidden={storyData.title !== ""}
             onClick={() => onChange({ propertyName: "EDIT" })}
@@ -184,6 +199,44 @@ function Storymapper() {
           >
             {storyData.title}
           </Text>
+
+          <AutoLayout width="fill-parent" overflow="visible">
+            <Frame width={0.01} height={0.01} overflow="visible">
+              <SVG
+                hidden={!storyData.description}
+                onClick={() => onChange({ propertyName: "DESCRIPTION" })}
+                src={
+                  showDescription ? descriptionShowIcon : descriptionHideIcon
+                }
+                width={s.md}
+                height={s.md}
+                x={-s.lg}
+              ></SVG>
+            </Frame>
+            <Text
+              hidden={showDescription || !storyData.description}
+              onClick={() => onChange({ propertyName: "DESCRIPTION" })}
+              fontSize={s.sm}
+              fontFamily={STYLE.fontFamily}
+              fill="#999999"
+              width="fill-parent"
+              height="hug-contents"
+            >
+              {"…"}
+            </Text>
+
+            <Text
+              hidden={!showDescription || storyData.description === ""}
+              onClick={() => onChange({ propertyName: "EDIT" })}
+              fontSize={s.md}
+              fontFamily={STYLE.fontFamily}
+              fill="#999999"
+              width="fill-parent"
+              height="hug-contents"
+            >
+              {storyData.description}
+            </Text>
+          </AutoLayout>
         </AutoLayout>
 
         <AutoLayout
@@ -193,6 +246,7 @@ function Storymapper() {
           width="fill-parent"
           spacing={s.xs}
           direction="vertical"
+          overflow="visible"
         >
           <AutoLayout
             width="fill-parent"
@@ -203,11 +257,12 @@ function Storymapper() {
 
           <AutoLayout
             hidden={!storyData.date}
-            spacing={s.xxs}
-            verticalAlignItems="center"
             width="fill-parent"
+            overflow="visible"
           >
-            <SVG src={calendarIcon} width={s.md} height={s.md} />
+            <Frame width={0.01} height={0.01} overflow="visible">
+              <SVG src={calendarIcon} width={s.md} height={s.md} x={-s.lg} />
+            </Frame>
             <Text fontSize={s.sm} fontFamily={STYLE.fontFamily} fill="#999">
               {storyData.date?.split("-").reverse().join("-")}
             </Text>
@@ -215,11 +270,12 @@ function Storymapper() {
 
           <AutoLayout
             hidden={!storyData.tags || storyData.tags.length === 0}
-            spacing={s.xxs}
-            verticalAlignItems="center"
             width="fill-parent"
+            overflow="visible"
           >
-            <SVG src={tagIcon} width={s.md} height={s.md} />
+            <Frame width={0.01} height={0.01} overflow="visible">
+              <SVG src={tagIcon} width={s.md} height={s.md} x={-s.lg} />
+            </Frame>
             <Text
               fontSize={s.sm}
               fontFamily={STYLE.fontFamily}
@@ -238,38 +294,38 @@ function Storymapper() {
       </AutoLayout>
 
       <AutoLayout
-          spacing={s.xxxs}
-          hidden={!storyData.score}
-          fill={storyItem.color.light}
-          padding={{ vertical: s.xs, horizontal: s.xs }}
-          cornerRadius={{
-            topLeft: 0,
-            topRight: 0,
-            bottomLeft: s.md,
-            bottomRight: 0,
-          }}
-          direction="vertical"
-          horizontalAlignItems="center"
+        spacing={s.xxxs}
+        hidden={!storyData.score}
+        fill={storyItem.color.light}
+        padding={{ vertical: s.xs, horizontal: s.xs }}
+        cornerRadius={{
+          topLeft: 0,
+          topRight: 0,
+          bottomLeft: s.md,
+          bottomRight: 0,
+        }}
+        direction="vertical"
+        horizontalAlignItems="center"
+      >
+        <Text
+          fontSize={s.xs}
+          fontFamily={STYLE.fontFamily}
+          textCase="upper"
+          fontWeight="medium"
+          width="hug-contents"
         >
-          <Text
-            fontSize={s.xs}
-            fontFamily={STYLE.fontFamily}
-            textCase="upper"
-            fontWeight="medium"
-            width="hug-contents"
-          >
-            score
-          </Text>
-          <Text
-            fontSize={s.md}
-            fontFamily={STYLE.fontFamily}
-            fontWeight="bold"
-            horizontalAlignText="center"
-            width="hug-contents"
-          >
-            {storyData.score}
-          </Text>
-        </AutoLayout>
+          score
+        </Text>
+        <Text
+          fontSize={s.md}
+          fontFamily={STYLE.fontFamily}
+          fontWeight="bold"
+          horizontalAlignText="center"
+          width="hug-contents"
+        >
+          {storyData.score}
+        </Text>
+      </AutoLayout>
     </AutoLayout>
   );
 }
