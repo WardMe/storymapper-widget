@@ -19,6 +19,7 @@ const {
   Text,
   SVG,
   Frame,
+  Input,
   useSyncedState,
   usePropertyMenu,
   useWidgetId,
@@ -119,10 +120,9 @@ function Storymapper() {
       cornerRadius={s.md}
       stroke={storyItem.color.light}
       strokeWidth={2}
-      onClick={() => onChange({ propertyName: "EDIT" })}
     >
       <AutoLayout padding={s.md}>
-        <Frame width={s.xl} height={s.xl} cornerRadius={s.xl}>
+        <Frame width={s.xl} height={s.xl} cornerRadius={s.xl} onClick={() => onChange({ propertyName: "EDIT" })} tooltip="More edit options">
           <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
           <SVG
             src={editIcon}
@@ -188,9 +188,21 @@ function Storymapper() {
         <AutoLayout
           width="fill-parent"
           direction="vertical"
-          spacing={s.xxs}
+          spacing={s.sm}
+          padding={{top:s.xs}}
           overflow="visible"
         >
+          <Input
+            value={storyData.title}
+            placeholder={`Add title here…`}
+            onTextEditEnd={(e) => {
+              setStoryData({...storyData, title : e.characters});
+            }}
+            fontSize={s.lg}
+            fontFamily={STYLE.fontFamily}
+            width="fill-parent"
+            inputBehavior="wrap"
+          />
           <Text
             hidden={storyData.title !== ""}
             onClick={() => onChange({ propertyName: "EDIT" })}
@@ -201,16 +213,6 @@ function Storymapper() {
             fill="#999"
           >
             {storyItem.description}
-          </Text>
-          <Text
-            hidden={storyData.title === ""}
-            onClick={() => onChange({ propertyName: "EDIT" })}
-            fontSize={s.lg}
-            fontFamily={STYLE.fontFamily}
-            width="fill-parent"
-            height="hug-contents"
-          >
-            {storyData.title}
           </Text>
 
           <AutoLayout width="fill-parent" overflow="visible">
