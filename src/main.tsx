@@ -119,9 +119,22 @@ function Storymapper() {
       cornerRadius={s.md}
       stroke={storyItem.color.light}
       strokeWidth={2}
+      onClick={() => onChange({ propertyName: "EDIT" })}
     >
       <AutoLayout padding={s.md}>
-        <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
+        <Frame width={s.xl} height={s.xl} cornerRadius={s.xl}>
+          <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
+          <SVG
+            src={editIcon}
+            width={s.xl}
+            height={s.xl}
+            opacity={0}
+            fill={storyItem.color.regular}
+            hoverStyle={{
+              opacity: 1,
+            }}
+          ></SVG>
+        </Frame>
       </AutoLayout>
 
       <AutoLayout
