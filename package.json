@@ -16,9 +16,7 @@
     "watch": "build-figma-plugin --typecheck --watch"
   },
   "figma-plugin": {
-    "editorType": [
-      "figjam"
-    ],
+    "editorType": ["figma", "figjam"],
     "containsWidget": true,
     "id": "1047983508317374017",
     "name": "Storymapper Widget",
