@@ -122,7 +122,13 @@ function Storymapper() {
       strokeWidth={2}
     >
       <AutoLayout padding={s.md}>
-        <Frame width={s.xl} height={s.xl} cornerRadius={s.xl} onClick={() => onChange({ propertyName: "EDIT" })} tooltip="More edit options">
+        <Frame
+          width={s.xl}
+          height={s.xl}
+          cornerRadius={s.xl}
+          onClick={() => onChange({ propertyName: "EDIT" })}
+          tooltip="More edit options"
+        >
           <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
           <SVG
             src={editIcon}
@@ -153,15 +159,21 @@ function Storymapper() {
             padding={{ vertical: s.xxs, horizontal: s.xs }}
             fill={storyItem.color.light}
             cornerRadius={s.xxs}
+            width="hug-contents"
           >
-            <Text
+            <Input
+              value={storyItem.title}
+              placeholder={`Add label here…`}
+              onTextEditEnd={(e) => {
+                setStoryItem({ ...storyItem, title: e.characters });
+              }}
               fontSize={s.sm}
               fontFamily={STYLE.fontFamily}
               textCase="upper"
               fontWeight="medium"
-            >
-              {storyItem.title}
-            </Text>
+              width={200}
+              inputBehavior="wrap"
+            />
           </AutoLayout>
 
           <AutoLayout hidden={!storyData.link}>
@@ -189,14 +201,14 @@ function Storymapper() {
           width="fill-parent"
           direction="vertical"
           spacing={s.sm}
-          padding={{top:s.xs}}
+          padding={{ top: s.xs }}
           overflow="visible"
         >
           <Input
             value={storyData.title}
             placeholder={`Add title here…`}
             onTextEditEnd={(e) => {
-              setStoryData({...storyData, title : e.characters});
+              setStoryData({ ...storyData, title: e.characters });
             }}
             fontSize={s.lg}
             fontFamily={STYLE.fontFamily}
