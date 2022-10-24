@@ -20,6 +20,7 @@ const {
   SVG,
   Frame,
   Input,
+  Line,
   useSyncedState,
   usePropertyMenu,
   useWidgetId,
@@ -113,52 +114,76 @@ function Storymapper() {
     fontFamily: "Inter",
   };
 
+  var dateFormatted = { date: "", month: "", year: "" };
+  var months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  if (storyData.date) {
+    const d = new Date(storyData.date);
+    dateFormatted = {
+      date: d.getDate().toString(),
+      month: months[d.getMonth()],
+      year: d.getFullYear().toString(),
+    };
+  }
+
   return (
     <AutoLayout
       width={s.vw}
       fill={"#FFFFFF"}
       cornerRadius={s.md}
       stroke={storyItem.color.light}
-      strokeWidth={2}
+      strokeWidth={4}
+      strokeAlign="outside"
+      direction="vertical"
     >
-      <AutoLayout padding={s.md}>
-        <Frame
-          width={s.xl}
-          height={s.xl}
-          cornerRadius={s.xl}
-          onClick={() => onChange({ propertyName: "EDIT" })}
-          tooltip="More edit options"
-        >
-          <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
-          <SVG
-            src={editIcon}
-            width={s.xl}
-            height={s.xl}
-            opacity={0}
-            fill={storyItem.color.regular}
-            hoverStyle={{
-              opacity: 1,
-            }}
-          ></SVG>
-        </Frame>
-      </AutoLayout>
-
-      <AutoLayout
-        padding={{ top: s.md, bottom: s.md, right: s.md }}
-        direction="vertical"
-        spacing={s.xs}
-        width="fill-parent"
-        overflow="visible"
-      >
+      <AutoLayout spacing={"auto"} width="fill-parent">
         <AutoLayout
-          width="fill-parent"
+          padding={{ top: s.md, left: s.lg }}
+          spacing={storySize === "medium" ? -4 : -3}
           verticalAlignItems="center"
-          spacing={!storyData.link ? 0 : "auto"}
         >
           <AutoLayout
-            padding={{ vertical: s.xxs, horizontal: s.xs }}
+            cornerRadius={s.xl}
             fill={storyItem.color.light}
-            cornerRadius={s.xxs}
+            padding={{ horizontal: s.xxs, vertical: s.xxs }}
+            onClick={() => onChange({ propertyName: "EDIT" })}
+            tooltip="More edit options"
+          >
+            <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
+            <SVG
+              src={editIcon}
+              width={s.xl}
+              height={s.xl}
+              opacity={0}
+              fill={storyItem.color.regular}
+              hoverStyle={{
+                opacity: 1,
+              }}
+              positioning="absolute"
+            ></SVG>
+          </AutoLayout>
+
+          <AutoLayout
+            padding={{ vertical: s.xxs, horizontal: s.md }}
+            fill={storyItem.color.light}
+            cornerRadius={{
+              topLeft: 0,
+              bottomLeft: 0,
+              topRight: s.xl,
+              bottomRight: s.xl,
+            }}
             width="hug-contents"
           >
             <Input
@@ -171,14 +196,41 @@ function Storymapper() {
               fontFamily={STYLE.fontFamily}
               textCase="upper"
               fontWeight="medium"
-              width={200}
+              width={s.vw / 3.5}
+              horizontalAlignText="center"
               inputBehavior="wrap"
             />
           </AutoLayout>
-
-          <AutoLayout hidden={!storyData.link}>
+        </AutoLayout>
+        <AutoLayout width={1} height={1}></AutoLayout>
+        <AutoLayout
+          hidden={!storyData.date && !storyData.link && !storyData.score}
+          cornerRadius={{ bottomLeft: s.xs }}
+          stroke={storyItem.color.light}
+          strokeWidth={1}
+          strokeAlign="outside"
+        >
+          <AutoLayout
+            hidden={!storyData.link}
+            width={s.xxxl}
+            horizontalAlignItems={"center"}
+            direction="vertical"
+            padding={{ left: s.xs, right: s.xs, top: s.sm, bottom: s.xs }}
+            spacing={s.xss}
+          >
+            <Text
+              fontSize={s.xs}
+              fontFamily={STYLE.fontFamily}
+              textCase="upper"
+              fontWeight="bold"
+              horizontalAlignText="center"
+              width="fill-parent"
+              height="hug-contents"
+              fill="#999"
+            >
+              link
+            </Text>
             <SVG
-              hidden={!storyData.link}
               onClick={() =>
                 new Promise<void>(function (resolve: () => void): void {
                   setTimeout(() => {
@@ -195,163 +247,230 @@ function Storymapper() {
               height={s.lg}
             ></SVG>
           </AutoLayout>
-        </AutoLayout>
 
-        <AutoLayout
-          width="fill-parent"
-          direction="vertical"
-          spacing={s.sm}
-          padding={{ top: s.xs }}
-          overflow="visible"
-        >
-          <Input
-            value={storyData.title}
-            placeholder={`Add title here…`}
-            onTextEditEnd={(e) => {
-              setStoryData({ ...storyData, title: e.characters });
-            }}
-            fontSize={s.lg}
-            fontFamily={STYLE.fontFamily}
-            width="fill-parent"
-            inputBehavior="wrap"
-          />
-          <Text
-            hidden={storyData.title !== ""}
-            onClick={() => onChange({ propertyName: "EDIT" })}
-            fontSize={s.md}
-            fontFamily={STYLE.fontFamily}
-            width="fill-parent"
-            height="hug-contents"
-            fill="#999"
-          >
-            {storyItem.description}
-          </Text>
-
-          <AutoLayout width="fill-parent" overflow="visible">
-            <Frame width={0.01} height={0.01} overflow="visible">
-              <SVG
-                hidden={!storyData.description}
-                onClick={() => onChange({ propertyName: "DESCRIPTION" })}
-                src={
-                  showDescription ? descriptionShowIcon : descriptionHideIcon
-                }
-                width={s.md}
-                height={s.md}
-                x={-s.lg}
-              ></SVG>
-            </Frame>
-            <Text
-              hidden={showDescription || !storyData.description}
-              onClick={() => onChange({ propertyName: "DESCRIPTION" })}
-              fontSize={s.sm}
-              fontFamily={STYLE.fontFamily}
-              fill="#999999"
-              width="fill-parent"
-              height="hug-contents"
-            >
-              {"…"}
-            </Text>
-
-            <Text
-              hidden={!showDescription || storyData.description === ""}
-              onClick={() => onChange({ propertyName: "EDIT" })}
-              fontSize={s.md}
-              fontFamily={STYLE.fontFamily}
-              fill="#999999"
-              width="fill-parent"
-              height="hug-contents"
-            >
-              {storyData.description}
-            </Text>
-          </AutoLayout>
-        </AutoLayout>
-
-        <AutoLayout
-          hidden={
-            !storyData.date && (!storyData.tags || storyData.tags.length === 0)
-          }
-          width="fill-parent"
-          spacing={s.xs}
-          direction="vertical"
-          overflow="visible"
-        >
           <AutoLayout
-            width="fill-parent"
-            height={1}
+            hidden={!storyData.link || !storyData.date}
+            width={1}
+            height="fill-parent"
             cornerRadius={s.xxs}
             fill={storyItem.color.light}
           ></AutoLayout>
 
           <AutoLayout
             hidden={!storyData.date}
-            width="fill-parent"
-            overflow="visible"
+            width={s.xxxl}
+            horizontalAlignItems={"center"}
+            direction="vertical"
+            padding={{ left: s.xs, right: s.xs, top: s.xs, bottom: s.xs }}
+            strokeAlign="outside"
+            strokeWidth={1}
+            stroke={storyItem.color.light}
           >
-            <Frame width={0.01} height={0.01} overflow="visible">
-              <SVG src={calendarIcon} width={s.md} height={s.md} x={-s.lg} />
-            </Frame>
-            <Text fontSize={s.sm} fontFamily={STYLE.fontFamily} fill="#999">
-              {storyData.date?.split("-").reverse().join("-")}
+            <Text
+              fontSize={s.xs}
+              fontFamily={STYLE.fontFamily}
+              textCase="upper"
+              fontWeight="bold"
+              horizontalAlignText="center"
+              width="fill-parent"
+              height="hug-contents"
+              fill="#999"
+            >
+              {dateFormatted.month}
+            </Text>
+            <Text
+              fontSize={s.md}
+              fontFamily={STYLE.fontFamily}
+              textCase="upper"
+              fontWeight="bold"
+              horizontalAlignText="center"
+              width="fill-parent"
+              height="hug-contents"
+              fill="#999"
+            >
+              {dateFormatted.date}
+            </Text>
+            <Text
+              fontSize={s.xs}
+              fontFamily={STYLE.fontFamily}
+              textCase="upper"
+              fontWeight="bold"
+              horizontalAlignText="center"
+              width="fill-parent"
+              height="hug-contents"
+              fill="#999"
+            >
+              {dateFormatted.year}
             </Text>
           </AutoLayout>
 
           <AutoLayout
-            hidden={!storyData.tags || storyData.tags.length === 0}
-            width="fill-parent"
-            overflow="visible"
+            hidden={(!storyData.link && !storyData.date) || !storyData.score}
+            width={1}
+            height="fill-parent"
+            cornerRadius={s.xxs}
+            fill={storyItem.color.light}
+          ></AutoLayout>
+
+          <AutoLayout
+            hidden={!storyData.score}
+            width={s.xxxl}
+            horizontalAlignItems={"center"}
+            direction="vertical"
+            padding={{ left: s.xs, right: s.xs, top: s.sm, bottom: s.xs }}
+            spacing={s.xxs}
           >
-            <Frame width={0.01} height={0.01} overflow="visible">
-              <SVG src={tagIcon} width={s.md} height={s.md} x={-s.lg} />
-            </Frame>
             <Text
-              fontSize={s.sm}
+              fontSize={s.xs}
               fontFamily={STYLE.fontFamily}
-              fill="#999"
+              textCase="upper"
+              fontWeight="bold"
+              horizontalAlignText="center"
               width="fill-parent"
+              height="hug-contents"
+              fill="#999"
             >
-              {storyData.tags &&
-                storyData.tags
-                  .map((tag) => {
-                    return `${tag.replace(/\x20/g, "\xa0")}`;
-                  })
-                  .join(" • ")}
+              score
+            </Text>
+            <Text
+              fontSize={s.md}
+              fontFamily={STYLE.fontFamily}
+              textCase="upper"
+              fontWeight="bold"
+              horizontalAlignText="center"
+              width="fill-parent"
+              height="hug-contents"
+              fill="#999"
+            >
+              {storyData.score}
             </Text>
           </AutoLayout>
         </AutoLayout>
       </AutoLayout>
 
       <AutoLayout
-        spacing={s.xxxs}
-        hidden={!storyData.score}
-        fill={storyItem.color.light}
-        padding={{ vertical: s.xs, horizontal: s.xs }}
-        cornerRadius={{
-          topLeft: 0,
-          topRight: 0,
-          bottomLeft: s.md,
-          bottomRight: 0,
-        }}
+        width="fill-parent"
         direction="vertical"
-        horizontalAlignItems="center"
+        spacing={s.sm}
+        padding={{ top: s.sm, bottom: s.xs, left: s.lg, right: s.lg }}
       >
-        <Text
-          fontSize={s.xs}
+        <Input
+          value={storyData.title}
+          placeholder={`Add title here…`}
+          onTextEditEnd={(e) => {
+            setStoryData({ ...storyData, title: e.characters });
+          }}
+          fontSize={s.lg}
           fontFamily={STYLE.fontFamily}
-          textCase="upper"
-          fontWeight="medium"
-          width="hug-contents"
-        >
-          score
-        </Text>
+          width="fill-parent"
+          inputBehavior="wrap"
+        />
         <Text
-          fontSize={s.md}
+          hidden={storyData.title !== ""}
+          onClick={() => onChange({ propertyName: "EDIT" })}
+          fontSize={s.sm}
           fontFamily={STYLE.fontFamily}
-          fontWeight="bold"
-          horizontalAlignText="center"
-          width="hug-contents"
+          width="fill-parent"
+          height="hug-contents"
+          fill="#999"
         >
-          {storyData.score}
+          {storyItem.description}
         </Text>
+
+        <AutoLayout
+          hidden={!storyData.description}
+          width="fill-parent"
+          overflow="visible"
+          direction="vertical"
+          spacing={s.sm}
+        >
+          <Text
+            hidden={!showDescription || storyData.description === ""}
+            onClick={() => onChange({ propertyName: "EDIT" })}
+            lineHeight={s.sm * 1.5}
+            fontSize={s.sm}
+            fontFamily={STYLE.fontFamily}
+            fill="#666666"
+            width="fill-parent"
+            height="hug-contents"
+          >
+            {storyData.description}
+          </Text>
+
+          <Text
+            onClick={() => onChange({ propertyName: "DESCRIPTION" })}
+            fontSize={s.xs}
+            fontFamily={STYLE.fontFamily}
+            textCase="upper"
+            width={"fill-parent"}
+            fill="#666666"
+            x={s.vw - s.xxl}
+          >
+            {showDescription ? "hide description ↑" : "show description ↓"}
+          </Text>
+        </AutoLayout>
+      </AutoLayout>
+
+      <AutoLayout
+        hidden={!storyData.tags || storyData.tags.length === 0}
+        width="fill-parent"
+        overflow="visible"
+        direction="vertical"
+        spacing={0}
+      >
+        <AutoLayout
+          width={"fill-parent"}
+          height={s.lg}
+          verticalAlignItems="center"
+        >
+          <Frame
+            width={s.lg}
+            height={s.lg}
+            fill={storyItem.color.light}
+            cornerRadius={s.lg}
+            positioning="absolute"
+            x={-s.md}
+          ></Frame>
+          <Line
+            strokeDashPattern={[s.xxs, s.xxs]}
+            length="fill-parent"
+            stroke={storyItem.color.light}
+          />
+          <Frame
+            width={s.lg}
+            height={s.lg}
+            fill={storyItem.color.light}
+            cornerRadius={s.lg}
+            positioning="absolute"
+            x={s.vw - s.xs}
+          ></Frame>
+        </AutoLayout>
+
+        <AutoLayout
+          width="fill-parent"
+          padding={{ top: s.xs, right: s.lg, bottom: s.md, left: s.lg }}
+          spacing={s.xs}
+        >
+          {storyData.tags &&
+            storyData.tags.map((tag) => (
+              <AutoLayout
+                width={"hug-contents"}
+                fill="#f0f0f0"
+                padding={{ horizontal: s.xs, vertical: s.xxxs }}
+                cornerRadius={s.lg}
+              >
+                <Text
+                  fontSize={s.xs}
+                  fontFamily={STYLE.fontFamily}
+                  fontWeight="bold"
+                  fill="#999999"
+                  textCase="upper"
+                >
+                  {tag.replace(/\x20/g, "\xa0")}
+                </Text>
+              </AutoLayout>
+            ))}
+        </AutoLayout>
       </AutoLayout>
     </AutoLayout>
   );
