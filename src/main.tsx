@@ -161,7 +161,6 @@ function Storymapper() {
             onClick={() => onChange({ propertyName: "EDIT" })}
             tooltip="More edit options"
           >
-            <SVG src={storyItem.icon} width={s.xl} height={s.xl}></SVG>
             <SVG
               src={editIcon}
               width={s.xl}
@@ -173,6 +172,8 @@ function Storymapper() {
               }}
               positioning="absolute"
             ></SVG>
+            <SVG src={storyItem.icon} width={s.xl} height={s.xl} hoverStyle={{opacity: 0}}></SVG>
+            
           </AutoLayout>
 
           <AutoLayout
