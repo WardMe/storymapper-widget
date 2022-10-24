@@ -352,7 +352,7 @@ function Storymapper() {
         width="fill-parent"
         direction="vertical"
         spacing={s.sm}
-        padding={{ top: s.sm, bottom: s.xs, left: s.lg, right: s.lg }}
+        padding={{ top: s.sm, bottom: s.sm, left: s.lg, right: s.lg }}
       >
         <Input
           value={storyData.title}
@@ -378,37 +378,38 @@ function Storymapper() {
         </Text>
 
         <AutoLayout
-          hidden={!storyData.description}
+          hidden={!storyData.description || !showDescription}
           width="fill-parent"
           overflow="visible"
           direction="vertical"
           spacing={s.sm}
         >
-          <Text
-            hidden={!showDescription || storyData.description === ""}
-            onClick={() => onChange({ propertyName: "EDIT" })}
-            lineHeight={s.sm * 1.5}
+          <Input
+            value={storyData.description || ""}
+            placeholder={`Add description here…`}
+            onTextEditEnd={(e) => {
+              setStoryData({ ...storyData, description: e.characters });
+            }}
             fontSize={s.sm}
             fontFamily={STYLE.fontFamily}
+            lineHeight={s.sm * 1.5}
             fill="#666666"
             width="fill-parent"
-            height="hug-contents"
-          >
-            {storyData.description}
-          </Text>
-
-          <Text
-            onClick={() => onChange({ propertyName: "DESCRIPTION" })}
-            fontSize={s.xs}
-            fontFamily={STYLE.fontFamily}
-            textCase="upper"
-            width={"fill-parent"}
-            fill="#666666"
-            x={s.vw - s.xxl}
-          >
-            {showDescription ? "hide description ↑" : "show description ↓"}
-          </Text>
+            inputBehavior="wrap"
+          />
         </AutoLayout>
+        <Text
+          hidden={!storyData.description}
+          onClick={() => onChange({ propertyName: "DESCRIPTION" })}
+          fontSize={s.xs}
+          fontFamily={STYLE.fontFamily}
+          textCase="upper"
+          width={"fill-parent"}
+          fill="#666666"
+          x={s.vw - s.xxl}
+        >
+          {showDescription ? "hide description ↑" : "show description ↓"}
+        </Text>
       </AutoLayout>
 
       <AutoLayout
