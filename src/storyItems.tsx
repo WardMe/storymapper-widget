@@ -13,7 +13,7 @@ type StoryItems = StoryItem[];
 const storyItems: StoryItems = [
   {
     type: "WHO",
-    title: "Who, what, where, when?",
+    title: "Persona",
     description:
       "Start with the main user(s) of this story and their context. Add extra users where they join the journey.",
     icon: `<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +26,7 @@ const storyItems: StoryItems = [
   },
   {
     type: "WHY",
-    title: "Why?",
+    title: "USER GOAL",
     description:
       "Why do they start this journey? What do they want to achieve?",
     icon: `<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
